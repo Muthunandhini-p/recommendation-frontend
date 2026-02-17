@@ -102,6 +102,12 @@ const Recommendation = ({ mood }) => {
             <h3>Recommendations for {mood}</h3>
             {loading && <p>Loading...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
+            {recommendation && (
+                <div style={{ marginTop: 12, padding: 8, background: '#f7f7fb', borderRadius: 6, fontSize: 12 }}>
+                    <strong>Debug:</strong>
+                    <pre style={{ whiteSpace: 'pre-wrap', margin: 6 }}>{JSON.stringify(recommendation, null, 2)}</pre>
+                </div>
+            )}
 
             <div style={{ marginTop: '16px', padding: '18px', borderRadius: '8px', background: '#fff', boxShadow: '0 6px 18px rgba(0,0,0,0.06)' }}>
                 <h4>🔔 Activity</h4>
