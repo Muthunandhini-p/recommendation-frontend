@@ -57,20 +57,45 @@ const Recommendation = ({ mood }) => {
 
     if (!mood) return null;
 
-    // Normalize data with sensible defaults
-    const activities = recommendation?.activityRecommendation
-        ? Array.isArray(recommendation.activityRecommendation)
-            ? recommendation.activityRecommendation
-            : [recommendation.activityRecommendation]
-        : defaultActivities;
+    // Normalize data with sensible defaults and guard against empty arrays/strings
+    const normalizeActivities = (raw) => {
+        if (!raw) return defaultActivities;
+        const arr = Array.isArray(raw) ? raw : [raw];
+        const cleaned = arr.map((s) => (typeof s === 'string' ? s.trim() : '')).filter(Boolean);
+        return cleaned.length ? cleaned : defaultActivities;
+    };
 
-    const songs = recommendation?.musicRecommendation
-        ? Array.isArray(recommendation.musicRecommendation)
-            ? recommendation.musicRecommendation
-            : [{ title: recommendation.musicRecommendation, url: '' }]
-        : defaultSongs;
+    const normalizeSongs = (raw) => {
+        if (!raw) return defaultSongs;
+        const arr = Array.isArray(raw) ? raw : [{ title: raw, url: '' }];
+        const cleaned = arr
+            .map((s) => {
+                if (typeof s === 'string') return { title: s, url: '' };
+                return { title: s.title || 'Unknown', url: s.url || '' };
+            })
+            .filter((s) => s.title || s.url);
+        // If none have usable urls, still show titles but fall back to default urls
+        if (!cleaned.length) return defaultSongs;
+        const anyUrl = cleaned.some((s) => s.url && s.url.trim());
+        if (!anyUrl) {
+            return cleaned.map((s, i) => ({ title: s.title, url: defaultSongs[i % defaultSongs.length].url }));
+        }
+        return cleaned;
+    };
 
-    const quote = recommendation?.quote || defaultQuote;
+    const normalizeQuote = (raw) => {
+        if (!raw && raw !== '') return defaultQuote;
+        let q = String(raw ?? '').trim();
+        // remove surrounding quotes like "..." or '...'
+        if ((q.startsWith('"') && q.endsWith('"')) || (q.startsWith("'") && q.endsWith("'"))) {
+            q = q.slice(1, -1).trim();
+        }
+        return q || defaultQuote;
+    };
+
+    const activities = normalizeActivities(recommendation?.activityRecommendation);
+    const songs = normalizeSongs(recommendation?.musicRecommendation);
+    const quote = normalizeQuote(recommendation?.quote);
 
     return (
         <div>
@@ -92,7 +117,10 @@ const Recommendation = ({ mood }) => {
                 <ul>
                     {songs.map((s, idx) => (
                         <li key={idx} style={{ marginBottom: '8px' }}>
-                            <button onClick={() => setCurrentSrc(s.url)} style={{ marginRight: '8px' }}>
+                            <button
+                                onClick={() => setCurrentSrc(s.url || defaultSongs[0].url)}
+                                style={{ marginRight: '8px' }}
+                            >
                                 ▶
                             </button>
                             {s.title}
