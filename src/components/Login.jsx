@@ -11,15 +11,28 @@ const Login = ({ onLogin, onSwitch }) => {
     setError("");
 
     try {
-      await api.post("/auth/login", {
+      await api.post("/api/auth/login", {
         username: username.trim(),
         password: password.trim(),
       });
 
       onLogin(username.trim());
     } catch (err) {
-      const msg = err.response?.data || "Login failed";
-      setError(msg);
+      console.error("Login error:", err);
+
+      let message = "Login failed";
+
+      if (err.response && err.response.data) {
+        if (typeof err.response.data === "string") {
+          message = err.response.data;
+        } else if (err.response.data.error) {
+          message = err.response.data.error;
+        } else {
+          message = "Invalid username or password";
+        }
+      }
+
+      setError(message);
     }
   };
 
@@ -51,7 +64,7 @@ const Login = ({ onLogin, onSwitch }) => {
         <button type="submit">Login</button>
       </form>
 
-      {error && <p>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <p>
         Don’t have an account?{" "}
