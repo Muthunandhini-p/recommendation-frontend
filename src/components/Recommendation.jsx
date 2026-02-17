@@ -1,29 +1,29 @@
 import React, { useState, useEffect, useRef } from "react";
 import api from "../services/api";
-import "../styles/Global.css";
+import "../styles/App.css";
 
 const Recommendation = ({ mood }) => {
   const [data, setData] = useState(null);
   const [currentSrc, setCurrentSrc] = useState("");
   const audioRef = useRef(null);
 
-  // Fetch recommendation when mood changes
   useEffect(() => {
-    const fetchRecommendation = async () => {
+    if (!mood) return;
+
+    async function fetchRecommendation() {
       try {
         const res = await api.get(`/api/recommend/${mood}`);
         setData(res.data);
       } catch (error) {
-        console.error("Error fetching recommendation:", error);
+        console.error(error);
       }
-    };
-
-    if (mood) {
-      fetchRecommendation();
     }
+
+    fetchRecommendation();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mood]);
 
-  // Play audio when source changes
   useEffect(() => {
     if (audioRef.current && currentSrc) {
       audioRef.current.src = currentSrc;
@@ -36,7 +36,6 @@ const Recommendation = ({ mood }) => {
 
   return (
     <div>
-      {/* Activities */}
       <div className="card">
         <h3 className="section-title">🧘 Activities</h3>
         <ul>
@@ -46,7 +45,6 @@ const Recommendation = ({ mood }) => {
         </ul>
       </div>
 
-      {/* Songs */}
       <div className="card">
         <h3 className="section-title">🎵 Songs</h3>
         {data.musicRecommendation?.map((song, index) => (
@@ -60,11 +58,9 @@ const Recommendation = ({ mood }) => {
             {song.title}
           </div>
         ))}
-
         <audio ref={audioRef} controls />
       </div>
 
-      {/* Quote */}
       <div className="card">
         <h3 className="section-title">💬 Quote</h3>
         <blockquote>"{data.quote}"</blockquote>
