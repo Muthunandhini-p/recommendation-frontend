@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import api from "../services/api";
 import Recommendation from "./Recommendation";
+import "../styles/MoodSelector.css";
+import "../styles/Global.css";
 
 const MoodSelector = ({ user }) => {
   const [mood, setMood] = useState("");
@@ -9,33 +11,31 @@ const MoodSelector = ({ user }) => {
   const submitMood = async () => {
     if (!mood) return;
 
-    try {
-      // Save mood in backend
-      await api.post("/api/mood", {
-        username: user,
-        mood: mood.toLowerCase()
-      });
+    await api.post("/api/mood", {
+      username: user,
+      mood,
+    });
 
-      // Trigger recommendation component
-      setSelectedMood(mood.toLowerCase());
-    } catch (error) {
-      console.error("Error saving mood:", error);
-    }
+    setSelectedMood(mood);
   };
 
   return (
-    <div className="container">
-      <div className="card">
-        <h2>Select Your Mood</h2>
+    <div className="center-container">
+      <div className="card-dark">
+        <h2 className="mood-header">Select Your Mood</h2>
 
-        <select value={mood} onChange={(e) => setMood(e.target.value)}>
+        <select
+          className="mood-select"
+          value={mood}
+          onChange={(e) => setMood(e.target.value)}
+        >
           <option value="">Choose mood</option>
           <option value="happy">Happy</option>
           <option value="sad">Sad</option>
           <option value="angry">Angry</option>
         </select>
 
-        <button onClick={submitMood}>
+        <button className="primary-btn" onClick={submitMood}>
           Get Recommendation
         </button>
       </div>

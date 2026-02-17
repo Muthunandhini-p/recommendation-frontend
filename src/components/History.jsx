@@ -1,95 +1,51 @@
-import React, { useState, useEffect } from 'react';
-import api from '../services/api';
+import React, { useState, useEffect } from "react";
+import api from "../services/api";
+import "../styles/History.css";
+import "../styles/Global.css";
 
 const History = ({ username }) => {
-    const [history, setHistory] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+  const [history, setHistory] = useState([]);
 
-    useEffect(() => {
-        if (username) {
-            fetchHistory();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [username]);
+  useEffect(() => {
+    if (username) {
+      api.get(`/api/history/${username}`).then((res) => {
+        setHistory(res.data);
+      });
+    }
+  }, [username]);
 
-    const fetchHistory = async () => {
-        setLoading(true);
-        setError('');
-        try {
-            // ✅ FIXED: added /api
-            const response = await api.get(`/api/history/${username}`);
-            setHistory(response.data);
-        } catch (err) {
-            console.error(err);
-            setError('Failed to fetch history');
-        } finally {
-            setLoading(false);
-        }
-    };
+  return (
+    <div className="center-container">
+      <div className="card-dark">
+        <h2>Mood History</h2>
 
-    const handleDelete = async (id) => {
-        if (!window.confirm('Are you sure you want to delete this mood?')) return;
+        <ul className="history-list">
+          {history.map((record) => (
+            <li key={record.id} className="history-item">
+              <div>
+                <strong>{record.mood}</strong>
+                <br />
+                <small>
+                  {new Date(record.timestamp).toLocaleString()}
+                </small>
+              </div>
 
-        try {
-            // ✅ FIXED: added /api
-            await api.delete(`/api/mood/${id}`);
-            setHistory(history.filter(item => item.id !== id));
-        } catch (err) {
-            console.error(err);
-            alert('Failed to delete mood');
-        }
-    };
-
-    return (
-        <div>
-            <h3>Mood History</h3>
-
-            {loading && <p>Loading history...</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-
-            {history.length === 0 && !loading ? (
-                <p>No mood history found.</p>
-            ) : (
-                <ul style={{ listStyleType: 'none', padding: 0 }}>
-                    {history.map((record) => (
-                        <li
-                            key={record.id}
-                            style={{
-                                borderBottom: '1px solid #eee',
-                                padding: '10px 0',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <div>
-                                <strong>{record.mood}</strong>
-                                <br />
-                                <small>
-                                    {new Date(record.timestamp).toLocaleString()}
-                                </small>
-                            </div>
-
-                            <button
-                                onClick={() => handleDelete(record.id)}
-                                style={{
-                                    backgroundColor: '#ff4444',
-                                    color: 'white',
-                                    border: 'none',
-                                    padding: '5px 10px',
-                                    borderRadius: '4px',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                Delete
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
-    );
+              <button
+                className="delete-btn"
+                onClick={() =>
+                  api.delete(`/api/mood/${record.id}`).then(() =>
+                    setHistory(history.filter((h) => h.id !== record.id))
+                  )
+                }
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
 };
 
 export default History;

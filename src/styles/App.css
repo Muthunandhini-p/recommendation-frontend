@@ -1,0 +1,170 @@
+/* ================= GLOBAL ================= */
+body {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: linear-gradient(135deg, #eef1ff, #f8f9ff);
+  color: #333;
+}
+
+.app-container {
+  min-height: 100vh;
+}
+
+/* ================= HEADER ================= */
+.header {
+  background: linear-gradient(135deg, #1e1f54, #4b4dff);
+  padding: 60px 20px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 52px;
+  font-weight: 700;
+}
+
+.welcome-text {
+  margin-top: 15px;
+  font-size: 20px;
+}
+
+.logout-btn {
+  margin-left: 15px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: none;
+  background: white;
+  color: #4b4dff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.logout-btn:hover {
+  transform: scale(1.05);
+}
+
+/* ================= CONTAINER ================= */
+.container {
+  max-width: 850px;
+  margin: -40px auto 60px auto;
+  padding: 0 20px;
+}
+
+/* ================= CARD ================= */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* ================= TITLES ================= */
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* ================= SELECT ================= */
+select {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  margin-bottom: 20px;
+  transition: 0.3s ease;
+}
+
+select:focus {
+  border-color: #4b4dff;
+  outline: none;
+}
+
+/* ================= BUTTONS ================= */
+.primary-btn {
+  background: linear-gradient(135deg, #4b4dff, #6c6eff);
+  color: white;
+  padding: 12px 22px;
+  border-radius: 30px;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(75, 77, 255, 0.3);
+}
+
+.danger-btn {
+  background: #ff4d4d;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+/* ================= LIST ================= */
+ul {
+  padding-left: 20px;
+}
+
+ul li {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+/* ================= SONG ================= */
+.song-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.song-item button {
+  margin-right: 12px;
+  padding: 8px 14px;
+  border-radius: 50%;
+}
+
+/* ================= AUDIO ================= */
+audio {
+  margin-top: 15px;
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* ================= QUOTE ================= */
+blockquote {
+  background: #f0f2ff;
+  padding: 18px;
+  border-left: 5px solid #4b4dff;
+  border-radius: 12px;
+  font-style: italic;
+  font-size: 16px;
+}
+
+/* ================= HISTORY ================= */
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.error-text {
+  color: red;
+}

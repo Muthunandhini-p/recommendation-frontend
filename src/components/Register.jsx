@@ -11,7 +11,7 @@ const Register = ({ onSwitch }) => {
     setMessage("");
 
     try {
-      const res = await api.post("/auth/register", {
+      const res = await api.post("/api/auth/register", {
         username: username.trim(),
         password: password.trim(),
       });

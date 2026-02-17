@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import './App.css';
-import Login from './components/Login';
-import Register from './components/Register';
-import MoodSelector from './components/MoodSelector';
-import Recommendation from './components/Recommendation';
-import History from './components/History';
+import React, { useState } from "react";
+import "./styles/Global.css";
+
+import Login from "./components/Login";
+import Register from "./components/Register";
+import MoodSelector from "./components/MoodSelector";
+import Recommendation from "./components/Recommendation";
+import History from "./components/History";
 
 function App() {
   const [user, setUser] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
   const [currentMood, setCurrentMood] = useState(null);
-  const [activeTab, setActiveTab] = useState('new'); // 'new' or 'history'
+  const [activeTab, setActiveTab] = useState("new");
 
   const handleLogin = (username) => {
     setUser(username);
@@ -19,7 +20,7 @@ function App() {
   const handleLogout = () => {
     setUser(null);
     setCurrentMood(null);
-    setActiveTab('new');
+    setActiveTab("new");
   };
 
   const handleMoodSelected = (mood) => {
@@ -27,57 +28,84 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Mood Recommender</h1>
+    <div className="app-container">
+      
+      {/* HEADER */}
+      <div className="app-header">
+        <div className="logo">Mood Recommender</div>
+
         {user && (
-          <div className="user-info">
-            <span>Welcome, {user}!</span>
-            <button onClick={handleLogout} className="logout-btn">Logout</button>
+          <div className="user-section">
+            <span className="welcome-text">
+              Welcome, <strong>{user}</strong>
+            </span>
+
+            <button className="logout-btn" onClick={handleLogout}>
+              Logout
+            </button>
           </div>
         )}
-      </header>
+      </div>
 
-      <main className="App-main">
+      {/* MAIN CONTENT */}
+      <div className="app-content">
         {!user ? (
-          <div className="auth-container">
+          <div className="auth-wrapper">
             {showRegister ? (
               <Register onSwitch={() => setShowRegister(false)} />
             ) : (
-              <Login onLogin={handleLogin} onSwitch={() => setShowRegister(true)} />
+              <Login
+                onLogin={handleLogin}
+                onSwitch={() => setShowRegister(true)}
+              />
             )}
           </div>
         ) : (
-          <div className="dashboard">
-            <div className="tabs">
+          <div className="dashboard-wrapper">
+            
+            {/* NAVIGATION */}
+            <div className="nav-bar">
               <button
-                className={activeTab === 'new' ? 'active' : ''}
-                onClick={() => setActiveTab('new')}
+                className={`nav-btn ${
+                  activeTab === "new" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("new")}
               >
                 New Mood
               </button>
+
               <button
-                className={activeTab === 'history' ? 'active' : ''}
-                onClick={() => setActiveTab('history')}
+                className={`nav-btn ${
+                  activeTab === "history" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("history")}
               >
                 History
               </button>
             </div>
 
-            <div className="tab-content">
-              {activeTab === 'new' ? (
+            {/* TAB CONTENT */}
+            <div className="dashboard-content">
+              {activeTab === "new" ? (
                 <>
-                  <MoodSelector username={user} onMoodSelected={handleMoodSelected} />
-                  <Recommendation mood={currentMood} />
+                  <MoodSelector
+                    user={user}
+                    onMoodSelected={handleMoodSelected}
+                  />
+                  {currentMood && (
+                    <Recommendation mood={currentMood} />
+                  )}
                 </>
               ) : (
                 <History username={user} />
               )}
             </div>
+
           </div>
         )}
-      </main>
+      </div>
     </div>
   );
 }
+
 export default App;

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import api from "../services/api";
+import "../styles/Login.css";
+import "../styles/Global.css";
 
 const Login = ({ onLogin, onSwitch }) => {
   const [username, setUsername] = useState("");
@@ -12,64 +14,43 @@ const Login = ({ onLogin, onSwitch }) => {
 
     try {
       await api.post("/api/auth/login", {
-        username: username.trim(),
-        password: password.trim(),
+        username,
+        password,
       });
 
-      onLogin(username.trim());
+      onLogin(username);
     } catch (err) {
-      console.error("Login error:", err);
-
-      let message = "Login failed";
-
-      if (err.response && err.response.data) {
-        if (typeof err.response.data === "string") {
-          message = err.response.data;
-        } else if (err.response.data.error) {
-          message = err.response.data.error;
-        } else {
-          message = "Invalid username or password";
-        }
-      }
-
-      setError(message);
+      setError("Invalid username or password");
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="login-container">
+      <div className="card-dark login-box">
+        <h2 className="login-title">Mood Recommender</h2>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
+        <form onSubmit={handleSubmit}>
           <input
             type="text"
+            placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
           />
-        </div>
 
-        <div>
-          <label>Password:</label>
           <input
             type="password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
-        </div>
 
-        <button type="submit">Login</button>
-      </form>
+          <button className="primary-btn" type="submit">
+            Login
+          </button>
+        </form>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <p>
-        Don’t have an account?{" "}
-        <button onClick={onSwitch}>Register here</button>
-      </p>
+        {error && <p className="error-text">{error}</p>}
+      </div>
     </div>
   );
 };

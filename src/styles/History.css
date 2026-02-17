@@ -1,0 +1,22 @@
+.history-list {
+  list-style: none;
+  padding: 0;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  border-radius: 15px;
+  background: #1e293b;
+  margin-bottom: 15px;
+}
+
+.delete-btn {
+  background: linear-gradient(90deg, #ff416c, #ff4b2b);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+}

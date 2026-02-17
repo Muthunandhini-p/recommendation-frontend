@@ -1,69 +1,43 @@
 import React, { useState, useEffect, useRef } from "react";
 import api from "../services/api";
+import "../styles/Recommendation.css";
+import "../styles/Global.css";
 
 const Recommendation = ({ mood }) => {
   const [data, setData] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [currentSrc, setCurrentSrc] = useState("");
   const audioRef = useRef(null);
+  const [currentSrc, setCurrentSrc] = useState("");
 
   useEffect(() => {
-    if (mood) {
-      fetchRecommendation();
-    }
-  }, [mood]);
-
-  useEffect(() => {
-    if (audioRef.current && currentSrc) {
-      audioRef.current.load();
-      audioRef.current.play().catch(() => {});
-    }
-  }, [currentSrc]);
-
-  const fetchRecommendation = async () => {
-    setLoading(true);
-    setError("");
-    setData(null);
-
-    try {
+    const fetchData = async () => {
       const response = await api.get(`/api/recommend/${mood}`);
       setData(response.data);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to fetch recommendation");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+    fetchData();
+  }, [mood]);
+
   if (!data) return null;
 
   return (
-    <div style={{ marginTop: "20px" }}>
-      <h3>Recommendations for {mood}</h3>
-
-      {/* Activities */}
-      <div className="card">
-        <h4>🧘 Activities</h4>
+    <div className="recommendation-section">
+      <div className="card-dark">
+        <h3>🧘 Activities</h3>
         <ul>
-          {data.activityRecommendation?.map((activity, index) => (
-            <li key={index}>{activity}</li>
+          {data.activityRecommendation.map((a, i) => (
+            <li key={i}>{a}</li>
           ))}
         </ul>
       </div>
 
-      {/* Songs */}
-      <div className="card" style={{ marginTop: "20px" }}>
-        <h4>🎵 Songs</h4>
+      <div className="card-dark">
+        <h3>🎵 Songs</h3>
         <ul>
-          {data.musicRecommendation?.map((song, index) => (
-            <li key={index} style={{ marginBottom: "10px" }}>
+          {data.musicRecommendation.map((song, i) => (
+            <li key={i}>
               <button
+                className="song-btn"
                 onClick={() => setCurrentSrc(song.url)}
-                style={{ marginRight: "8px" }}
               >
                 ▶
               </button>
@@ -72,17 +46,14 @@ const Recommendation = ({ mood }) => {
           ))}
         </ul>
 
-        <audio ref={audioRef} controls style={{ width: "100%" }}>
-          {currentSrc && <source src={currentSrc} type="audio/mpeg" />}
+        <audio ref={audioRef} controls>
+          {currentSrc && <source src={currentSrc} />}
         </audio>
       </div>
 
-      {/* Quote */}
-      <div className="card" style={{ marginTop: "20px" }}>
-        <h4>💬 Quote</h4>
-        <blockquote>
-          "{data.quote}"
-        </blockquote>
+      <div className="card-dark">
+        <h3>💬 Quote</h3>
+        <blockquote>{data.quote}</blockquote>
       </div>
     </div>
   );

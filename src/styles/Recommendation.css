@@ -1,0 +1,28 @@
+.recommendation-section h3 {
+  margin-bottom: 20px;
+}
+
+.recommendation-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.recommendation-section li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.song-btn {
+  margin-right: 10px;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  cursor: pointer;
+}
+
+blockquote {
+  font-style: italic;
+  opacity: 0.8;
+}
