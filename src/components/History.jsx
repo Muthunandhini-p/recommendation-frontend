@@ -7,7 +7,9 @@ const History = ({ username }) => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        fetchHistory();
+        if (username) {
+            fetchHistory();
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [username]);
 
@@ -15,11 +17,12 @@ const History = ({ username }) => {
         setLoading(true);
         setError('');
         try {
-            // GET /api/history/{username}
-            const response = await api.get(`/history/${username}`);
+            // ✅ FIXED: added /api
+            const response = await api.get(`/api/history/${username}`);
             setHistory(response.data);
         } catch (err) {
-            setError('Failed to fetch history: ' + (err.response?.data || err.message));
+            console.error(err);
+            setError('Failed to fetch history');
         } finally {
             setLoading(false);
         }
@@ -29,17 +32,19 @@ const History = ({ username }) => {
         if (!window.confirm('Are you sure you want to delete this mood?')) return;
 
         try {
-            // DELETE /api/mood/{id}
-            await api.delete(`/mood/${id}`);
+            // ✅ FIXED: added /api
+            await api.delete(`/api/mood/${id}`);
             setHistory(history.filter(item => item.id !== id));
         } catch (err) {
-            alert('Failed to delete mood: ' + (err.response?.data || err.message));
+            console.error(err);
+            alert('Failed to delete mood');
         }
     };
 
     return (
         <div>
             <h3>Mood History</h3>
+
             {loading && <p>Loading history...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
 
@@ -48,13 +53,35 @@ const History = ({ username }) => {
             ) : (
                 <ul style={{ listStyleType: 'none', padding: 0 }}>
                     {history.map((record) => (
-                        <li key={record.id} style={{ borderBottom: '1px solid #eee', padding: '10px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <li
+                            key={record.id}
+                            style={{
+                                borderBottom: '1px solid #eee',
+                                padding: '10px 0',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center'
+                            }}
+                        >
                             <div>
                                 <strong>{record.mood}</strong>
                                 <br />
-                                <small>{new Date(record.date).toLocaleString()}</small>
+                                <small>
+                                    {new Date(record.timestamp).toLocaleString()}
+                                </small>
                             </div>
-                            <button onClick={() => handleDelete(record.id)} style={{ backgroundColor: '#ff4444', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>
+
+                            <button
+                                onClick={() => handleDelete(record.id)}
+                                style={{
+                                    backgroundColor: '#ff4444',
+                                    color: 'white',
+                                    border: 'none',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer'
+                                }}
+                            >
                                 Delete
                             </button>
                         </li>
